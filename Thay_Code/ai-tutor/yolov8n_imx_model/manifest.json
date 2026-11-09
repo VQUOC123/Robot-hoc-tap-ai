@@ -1,0 +1,64 @@
+{
+  "Release Version": "3.18.1",
+  "Description": "Created by Packer",
+  "Target": "IMX500",
+  "Network ID": "yolov8n_imx",
+  "Network Name": "yolov8n_imx",
+  "Date Info": "Thu May 07 11:59:36 ICT 2026",
+  "SdspA": {
+    "LoadAddr": "0x5040000",
+    "File": "sdpsA.bin",
+    "md5": "293275C404CF25B3A4A818BF6FA9C504",
+    "Version": "3.18.1",
+    "Size": 97152
+  },
+  "SdspC": {
+    "LoadAddr": "0x6080000",
+    "File": "sdpsC.bin",
+    "md5": "06A7D169B34220C0B49691ED351D92B0",
+    "Version": "3.18.1",
+    "Size": 27776
+  },
+  "CfgBank1": {
+    "LoadAddr": "0x5000000",
+    "File": "cfgA.bin",
+    "md5": "18579FCC0B206281CBD5E350038B89DF",
+    "Version": "3.18.1",
+    "Size": 262144
+  },
+  "CfgBank2": {
+    "LoadAddr": "0x6000000",
+    "File": "cfgC.bin",
+    "md5": "AEF293BEDA78FED2B1135444FF77E8DB",
+    "Version": "3.18.1",
+    "Size": 91228
+  },
+  "xmlSchema": {
+    "LoadAddr": "NA",
+    "File": "dnnParams.xsd",
+    "md5": "F8AAC1CFE40FDED8CCE5813D9815BBEA",
+    "Version": "3.18.1",
+    "Size": 5089
+  },
+  "xml": {
+    "LoadAddr": "NA",
+    "File": "dnnParams.xml",
+    "md5": "97BDA4690AAF2B5C5A3288F17ED714D9",
+    "Version": "3.18.1",
+    "Size": 2623
+  },
+  "coef": {
+    "LoadAddr": "0x4569200",
+    "File": "l2staticData.bin",
+    "md5": "32735CFDBDD1750C27022AA3F9315D94",
+    "Version": "3.18.1",
+    "Size": 2714976
+  },
+  "Versions": {
+    "LoadAddr": "0x0000E000",
+    "File": "verTable.txt",
+    "md5": "A83DD2710301A3AD6E48DED26613694A",
+    "Version": "3.18.1",
+    "Size": 577
+  }
+}

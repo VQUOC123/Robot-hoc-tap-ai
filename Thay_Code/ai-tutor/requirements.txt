@@ -1,0 +1,41 @@
+# ═══════════════════════════════════════════════════════
+#  AI Tutor — Python dependencies
+#  Cài đặt: pip install -r requirements.txt
+#
+#  Xem setup.sh để cài đầy đủ (bao gồm system packages)
+# ═══════════════════════════════════════════════════════
+
+# ── Web server ──────────────────────────────────────────
+flask>=3.0.0
+
+# ── Camera & Vision ─────────────────────────────────────
+# opencv-python-headless: không cần GUI (nhẹ hơn trên RPi)
+opencv-python-headless>=4.8.0
+numpy>=1.24.0,<2.0.0           # picamera2/simplejpeg yêu cầu numpy 1.x ABI
+Pillow>=10.0.0
+
+# ── AI / Pose Detection ─────────────────────────────────
+mediapipe>=0.10.0
+ultralytics>=8.4.32            # YOLO26 hỗ trợ từ 8.4.32
+
+# ── ONNX Runtime (tăng tốc YOLO ~2.75× trên RPi5) ───────
+onnx>=1.12.0,<2.0.0            # Export .pt → .onnx (ultralytics yêu cầu <2.0.0)
+onnxslim>=0.1.71               # Slim/optimize ONNX graph khi export
+onnxruntime>=1.16.0            # Inference với .onnx (ARM64 wheel tự động)
+
+# ── Config & Utils ──────────────────────────────────────
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# ── Text to Speech ──────────────────────────────────────
+gTTS>=2.5.0                   # Online TTS (cần internet)
+# espeak cài qua apt: sudo apt install espeak  (offline fallback)
+
+# ══════════════════════════════════════════════════════
+#  AI Providers — chỉ cài provider bạn dùng
+#  Cách cài: pip install anthropic  (hoặc openai, google-genai)
+# ══════════════════════════════════════════════════════
+
+# anthropic>=0.40.0            # Claude (Anthropic API / proxy)
+# openai>=1.30.0               # GPT-4o / OpenRouter / LiteLLM proxy
+# google-genai>=0.7.0   # Gemini

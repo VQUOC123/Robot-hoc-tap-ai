@@ -1,0 +1,49 @@
+# Virtual environments
+venv/
+**/venv/
+**/.venv/
+env/
+**/env/
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Python cache & compiled files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments and Secrets
+.env
+**/.env
+.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Large disk image archives and SD card backups (>3GB)
+*.tar.gz
+*.tar
+*.zip
+*.rar
+*.7z
+.git_backups/
+
+# Build artifacts
+dist/
+**/dist/
+build/
+**/build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs
+*.log
+**/logs/*
+!**/logs/.gitkeep

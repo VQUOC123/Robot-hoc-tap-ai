@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source venv/bin/activate)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.raspberrypi.com)",
+      "WebSearch",
+      "Bash(grep:*)",
+      "Read(//home/pi/tutor-airobot-be/internal/domain/repository/**)",
+      "Read(//home/pi/tutor-airobot-be/internal/application/analysis/**)",
+      "Read(//home/pi/tutor-airobot-be/**)",
+      "Bash(go build:*)",
+      "Read(//usr/local/go/**)",
+      "Read(//home/pi/**)"
+    ]
+  }
+}

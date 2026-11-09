@@ -1,0 +1,11 @@
+# .gitignore
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+logs/*.log
+*.jpg
+*.mp4
+*.h264
+.DS_Store

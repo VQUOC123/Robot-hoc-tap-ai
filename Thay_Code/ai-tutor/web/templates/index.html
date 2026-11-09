@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>AI Tutor Monitor</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #0f0f1a;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+.hdr {
+    background: #16213e;
+    padding: 10px 20px;
+    border-bottom: 2px solid #e94560;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+.hdr h1 {
+    color: #e94560;
+    font-size: 1.1rem;
+}
+.main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+.cam {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #06060f;
+    padding: 8px;
+}
+.cam img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    border: 1px solid #1a1a3e;
+}
+.side {
+    width: 360px;
+    background: #12122a;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #1a1a3e;
+    overflow-y: auto;
+}
+.card {
+    padding: 12px;
+    border-bottom: 1px solid #1a1a3e;
+}
+.card h3 {
+    color: #e94560;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+.stbox {
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 6px;
+    background: #1a1a3e;
+    text-align: center;
+    line-height: 1.4;
+}
+.bbg {
+    background: #1a1a3e;
+    border-radius: 4px;
+    height: 14px;
+    margin: 6px 0 2px;
+    overflow: hidden;
+}
+.bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s, background 0.3s;
+}
+.sc {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #00d4aa;
+}
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 0.8rem;
+    padding: 5px 0;
+    border-bottom: 1px solid #0f0f2a;
+    gap: 8px;
+}
+.row:last-child {
+    border: none;
+}
+.lbl {
+    color: #666;
+    flex-shrink: 0;
+}
+.val {
+    color: #00d4aa;
+    text-align: right;
+    font-size: 0.78rem;
+    line-height: 1.3;
+}
+.logbox {
+    background: #06060f;
+    border-radius: 6px;
+    padding: 8px;
+    height: 200px;
+    overflow-y: auto;
+    font-size: 0.75rem;
+    font-family: monospace;
+}
+.ll {
+    padding: 2px 0;
+    border-bottom: 1px solid #0a0a1a;
+    word-break: break-word;
+    line-height: 1.3;
+}
+.ok   { color: #00d4aa; }
+.warn { color: #ffaa00; }
+.err  { color: #ff4444; }
+.def  { color: #666;    }
+.chatbox {
+    background: #06060f;
+    border-radius: 6px;
+    padding: 8px;
+    height: 160px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+.msg {
+    padding: 5px 8px;
+    border-radius: 6px;
+    margin: 3px 0;
+    line-height: 1.4;
+}
+.mu {
+    background: #1a1a3e;
+    color: #a0c4ff;
+    text-align: right;
+}
+.ma {
+    background: #0d3d2e;
+    color: #00d4aa;
+}
+.ms {
+    color: #444;
+    text-align: center;
+    font-size: 0.72rem;
+}
+.irow {
+    display: flex;
+    gap: 6px;
+}
+input {
+    flex: 1;
+    background: #0a0a1e;
+    border: 1px solid #1a1a3e;
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: white;
+    font-size: 0.82rem;
+    outline: none;
+}
+input:focus {
+    border-color: #e94560;
+}
+button {
+    background: #e94560;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+button:hover {
+    background: #c73652;
+}
+::-webkit-scrollbar {
+    width: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background: #2a2a5e;
+    border-radius: 2px;
+}
+/* Multi-person cards */
+.person-card {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1a1a3e;
+}
+.person-hdr {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.person-badge {
+    font-size: 1rem;
+    font-weight: bold;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #1a1a3e;
+}
+.person-activity {
+    font-size: 0.82rem;
+    font-weight: bold;
+    flex: 1;
+    line-height: 1.3;
+}
+.person-score-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.person-bar-bg {
+    flex: 1;
+    background: #1a1a3e;
+    border-radius: 3px;
+    height: 8px;
+    overflow: hidden;
+}
+.person-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s, background 0.3s;
+}
+.person-score-val {
+    font-size: 0.78rem;
+    color: #00d4aa;
+    width: 30px;
+    text-align: right;
+    flex-shrink: 0;
+}
+.person-gaze {
+    font-size: 0.72rem;
+    color: #555;
+    margin-top: 3px;
+}
+.person-objects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+    min-height: 4px;
+}
+.obj-tag {
+    font-size: 0.68rem;
+    background: #0d0d20;
+    border: 1px solid #1a1a3e;
+    border-radius: 3px;
+    padding: 1px 5px;
+    white-space: nowrap;
+}
+/* Homework panel */
+.hw-panel {
+    background: #0d1a0d;
+    border: 1px solid #1a3a1a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+}
+.hw-panel.requesting {
+    background: #1a1200;
+    border-color: #ffaa00;
+    animation: hwpulse 1.5s infinite alternate;
+}
+.hw-panel.captured {
+    background: #0d1a0d;
+    border-color: #00d4aa;
+}
+.hw-panel.cooldown {
+    background: #0d0d1a;
+    border-color: #333;
+}
+@keyframes hwpulse {
+    from { box-shadow: 0 0 0 0 rgba(255,170,0,0.15); }
+    to   { box-shadow: 0 0 8px 4px rgba(255,170,0,0.25); }
+}
+.hw-msg {
+    color: #ffaa00;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+.hw-panel.captured .hw-msg { color: #00d4aa; }
+.hw-panel.cooldown .hw-msg { color: #555; }
+.hw-countdown {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #ffaa00;
+    text-align: center;
+    margin: 4px 0;
+}
+.hw-progress-bg {
+    background: #1a1a3e;
+    border-radius: 3px;
+    height: 6px;
+    margin: 6px 0 2px;
+    overflow: hidden;
+}
+.hw-progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: #2a3a2a;
+    transition: width 0.5s, background 0.3s;
+}
+#hwCaptureBtn {
+    width: 100%;
+    margin-top: 8px;
+    background: #c07000;
+}
+#hwCaptureBtn:hover { background: #e08800; }
+#hwCaptureBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+#hwAnalyzeBtn {
+    width: 100%;
+    margin-top: 8px;
+    background: #00805a;
+}
+#hwAnalyzeBtn:hover { background: #00a070; }
+#hwAnalyzeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.hw-result {
+    margin-top: 8px;
+    background: #06060f;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #ccc;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+/* Capture button — đặt đè lên góc dưới camera */
+.cam {
+    position: relative;
+}
+#captureBtn {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.65);
+    border: 1px solid #e94560;
+    color: white;
+    font-size: 0.88rem;
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+    z-index: 10;
+}
+#captureBtn:hover {
+    background: #e94560;
+}
+#captureBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+/* Modal overlay */
+#captureModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+#captureModal.open {
+    display: flex;
+}
+.modal-box {
+    background: #12122a;
+    border: 1px solid #1a1a3e;
+    border-radius: 12px;
+    width: min(90vw, 900px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.modal-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #1a1a3e;
+    flex-shrink: 0;
+}
+.modal-hdr h2 {
+    color: #e94560;
+    font-size: 0.95rem;
+}
+.modal-hdr .close-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0 4px;
+}
+.modal-hdr .close-btn:hover {
+    color: white;
+    background: none;
+}
+.modal-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 0;
+}
+.modal-img-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: #06060f;
+    border-right: 1px solid #1a1a3e;
+    min-width: 0;
+}
+.modal-img-panel img {
+    max-width: 100%;
+    max-height: 55vh;
+    border-radius: 6px;
+    object-fit: contain;
+}
+.img-meta {
+    color: #555;
+    font-size: 0.75rem;
+    margin-top: 8px;
+    text-align: center;
+}
+.modal-text-panel {
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    flex-shrink: 0;
+}
+.modal-text-panel h3 {
+    color: #e94560;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+#readBtn {
+    margin-bottom: 10px;
+    width: 100%;
+    flex-shrink: 0;
+}
+#aiProvider {
+    font-size: 0.7rem;
+    color: #555;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+}
+#contentResult {
+    flex: 1;
+    background: #06060f;
+    border-radius: 6px;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #ccc;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: monospace;
+    min-height: 120px;
+}
+.reading-spinner {
+    color: #ffaa00;
+    font-size: 0.82rem;
+}
+/* ── Alert Toast ─────────────────────────────────────── */
+#alertToast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e3a5f;
+    border: 1px solid #4a9eff;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    color: #e0f0ff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    max-width: 480px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+#alertToast.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+#alertToast .toast-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Alert Toast (hiển thị TTS message khi chưa có loa) -->
+<div id="alertToast">
+    <span class="toast-icon">🔔</span>
+    <span id="alertToastText"></span>
+</div>
+
+<!-- Header -->
+<div class="hdr">
+    <h1>🎓 AI Tutor Monitor</h1>
+    <span id="uptime"
+          style="color:#555; font-size:0.8rem">
+        Uptime: 0s
+    </span>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+    <!-- Camera Stream -->
+    <div class="cam">
+        <img id="feed"
+             src=""
+             alt="Dang tai camera...">
+        <button id="captureBtn"
+                onclick="doCapture()"
+                title="Chup anh va doc noi dung">
+            📸 Chup
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="side">
+
+        <!-- Single-person: Trang thai + Score + Chi tiet -->
+        <div id="singleSection">
+            <div class="card">
+                <h3>Trang Thai</h3>
+                <div class="stbox" id="status">
+                    Dang khoi dong...
+                </div>
+            </div>
+            <div class="card">
+                <h3>Focus Score</h3>
+                <div class="bbg">
+                    <div class="bar" id="scoreBar"
+                         style="width:0%;background:#e94560">
+                    </div>
+                </div>
+                <div class="sc" id="scoreText">0%</div>
+            </div>
+            <div class="card">
+                <h3>Chi Tiet</h3>
+                <div class="row">
+                    <span class="lbl">Tay</span>
+                    <span class="val" id="detHand">-</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Nhin</span>
+                    <span class="val" id="detGaze">-</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Tu the</span>
+                    <span class="val" id="detPose">-</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">FPS</span>
+                    <span class="val" id="detFps">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-person: danh sach A/B/C -->
+        <div id="multiSection" style="display:none">
+            <div class="card" style="padding-bottom:4px">
+                <h3 style="margin-bottom:4px">Nguoi tham gia
+                    <span id="personCount"
+                          style="color:#555;font-size:0.72rem;
+                                 font-weight:normal;
+                                 text-transform:none;
+                                 letter-spacing:0">
+                    </span>
+                </h3>
+            </div>
+            <div id="personCards"></div>
+            <div class="card">
+                <div class="row">
+                    <span class="lbl">FPS</span>
+                    <span class="val" id="multiFps">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Homework Assistant -->
+        <div class="card" id="hwCard" style="display:none">
+            <h3>📖 Homework Assistant</h3>
+            <div class="hw-panel" id="hwPanel">
+                <div class="hw-msg" id="hwMsg"></div>
+                <div class="hw-countdown" id="hwCountdown" style="display:none"></div>
+                <div class="hw-progress-bg" id="hwProgressBg" style="display:none">
+                    <div class="hw-progress-bar" id="hwProgressBar" style="width:0%"></div>
+                </div>
+                <button id="hwCaptureBtn"
+                        style="display:none"
+                        onclick="captureHomework()">
+                    📸 Chụp hình bài tập
+                </button>
+                <button id="hwAnalyzeBtn"
+                        style="display:none"
+                        onclick="analyzeHomework()">
+                    🔍 Phân tích bằng AI
+                </button>
+                <div class="hw-result" id="hwResult" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- Display Settings -->
+        <div class="card" style="padding-bottom:8px">
+            <h3 style="margin-bottom:6px">Hien thi</h3>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem">
+                <input type="checkbox" id="chkYoloBoxes" checked
+                       onchange="setDisplayFlag('show_yolo_boxes', this.checked)"
+                       style="width:15px;height:15px;cursor:pointer">
+                Khung YOLO (phone, keyboard, book...)
+            </label>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="card">
+            <h3>Activity Log</h3>
+            <div class="logbox" id="logBox">
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="card">
+            <h3>Chat voi AI</h3>
+            <div class="chatbox" id="chatBox">
+                <div class="msg ms">
+                    Nhap cau hoi ben duoi...
+                </div>
+            </div>
+            <div class="irow">
+                <input type="text"
+                       id="chatInput"
+                       placeholder="Hoi AI..."
+                       onkeypress="handleKey(event)">
+                <button onclick="sendChat()">
+                    Gui
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Capture Modal -->
+<div id="captureModal">
+    <div class="modal-box">
+        <div class="modal-hdr">
+            <h2>📸 Anh chup — Doc noi dung bang AI</h2>
+            <button class="close-btn"
+                    onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- Anh chup -->
+            <div class="modal-img-panel">
+                <img id="capturedImg" src="" alt="Chua chup">
+                <div class="img-meta" id="imgMeta">—</div>
+            </div>
+            <!-- Ket qua doc noi dung -->
+            <div class="modal-text-panel">
+                <h3>Noi dung doc duoc</h3>
+                <div id="aiProvider"></div>
+                <button id="readBtn"
+                        onclick="readContent()">
+                    🔍 Doc noi dung bang AI
+                </button>
+                <div id="contentResult">
+                    Bam "Doc noi dung bang AI" de phan tich anh.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var lastStatus = '';
+var capturedImageB64 = '';   // Luu base64 de gui cho AI
+
+// Mau theo nhan A/B/C/D (khop voi _PERSON_COLORS trong tracker)
+var PERSON_COLORS = {
+    'A': '#ffc832',
+    'B': '#32ff32',
+    'C': '#3264ff',
+    'D': '#c832ff',
+    'E': '#32c8c8'
+};
+
+// ── Format thoi gian ─────────────────────────────────
+function formatTime(s) {
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var r = s % 60;
+    if (h > 0) return h + 'h ' + m + 'm ' + r + 's';
+    if (m > 0) return m + 'm ' + r + 's';
+    return r + 's';
+}
+
+// ── Mau theo score ───────────────────────────────────
+function scoreColor(n) {
+    if (n >= 70) return '#00d4aa';
+    if (n >= 40) return '#ffaa00';
+    return '#ff4444';
+}
+
+// ── Class log theo activity ──────────────────────────
+function logClass(activity) {
+    var ok = [
+        'working_computer',
+        'writing_notes',
+        'reading',
+        'watching_screen'
+    ];
+    var warn = [
+        'distracted',
+        'drowsy',
+        'still',
+        'present'
+    ];
+    var err = [
+        'absent',
+        'long_absent'
+    ];
+
+    if (ok.indexOf(activity) >= 0)   return 'ok';
+    if (warn.indexOf(activity) >= 0) return 'warn';
+    if (err.indexOf(activity) >= 0)  return 'err';
+    return 'def';
+}
+
+// ── Them log ─────────────────────────────────────────
+function addLog(text, activity) {
+    if (text === lastStatus || !text) return;
+    lastStatus = text;
+
+    var box = document.getElementById('logBox');
+    var div = document.createElement('div');
+    var t   = new Date().toLocaleTimeString();
+
+    div.className   = 'll ' + logClass(activity);
+    div.textContent = '[' + t + '] ' + text;
+    box.insertBefore(div, box.firstChild);
+
+    while (box.children.length > 60) {
+        box.removeChild(box.lastChild);
+    }
+}
+
+// Icon + mau cho tung loai vat the YOLO
+var OBJ_META = {
+    'monitor' : { icon: '🖥️',  label: 'Monitor', color: '#4488ff' },
+    'laptop'  : { icon: '💻',  label: 'Laptop',  color: '#66aaff' },
+    'keyboard': { icon: '⌨️',  label: 'KBD',     color: '#44cc44' },
+    'mouse'   : { icon: '🖱️',  label: 'Mouse',   color: '#44ddbb' },
+    'book'      : { icon: '📖',  label: 'Book',    color: '#ffaa33' },
+    'phone'     : { icon: '📱',  label: 'Phone',   color: '#ff4444' },
+    'bottle'    : { icon: '🍶',  label: 'Bottle',  color: '#88ccff' },
+    'cup'       : { icon: '☕',  label: 'Cup',     color: '#cc9966' },
+    'wine_glass': { icon: '🥂',  label: 'Glass',   color: '#ddaaff' },
+    'fork'      : { icon: '🍴',  label: 'Fork',    color: '#ff9966' },
+    'spoon'     : { icon: '🥄',  label: 'Spoon',   color: '#ffbb66' },
+    'bowl'      : { icon: '🥣',  label: 'Bowl',    color: '#ff8844' },
+};
+
+function buildObjTags(objects) {
+    if (!objects || objects.length === 0) return '';
+    var tags = '';
+    for (var i = 0; i < objects.length; i++) {
+        var key  = objects[i];
+        var meta = OBJ_META[key] || { icon: '?', label: key, color: '#888' };
+        tags += '<span class="obj-tag" style="color:' + meta.color + '" title="' + meta.label + '">' +
+                    meta.icon + ' ' + meta.label +
+                '</span>';
+    }
+    return '<div class="person-objects" id="pobjs-' + '{}' + '">' + tags + '</div>';
+}
+
+// ── Render 1 person card ─────────────────────────────
+function renderPersonCard(p) {
+    var lbl   = p.label || '?';
+    var color = PERSON_COLORS[lbl] || '#aaa';
+    var act   = p.final_activity || 'unknown';
+    var score = p.focus_score || 0;
+    var sc    = scoreColor(score);
+    var det   = p.details || {};
+    var gaze  = det.gaze || '';
+    var objs  = p.detected_objects || [];
+
+    var objHtml = '';
+    if (objs.length > 0) {
+        var tags = '';
+        for (var i = 0; i < objs.length; i++) {
+            var key  = objs[i];
+            var meta = OBJ_META[key] || { icon: '▪', label: key, color: '#888' };
+            tags += '<span class="obj-tag" style="color:' + meta.color + '" title="' + meta.label + '">' +
+                        meta.icon + ' ' + meta.label +
+                    '</span>';
+        }
+        objHtml = '<div class="person-objects" id="pobjs-' + lbl + '">' + tags + '</div>';
+    } else {
+        objHtml = '<div class="person-objects" id="pobjs-' + lbl + '"></div>';
+    }
+
+    var card = document.createElement('div');
+    card.className   = 'person-card';
+    card.id          = 'pcard-' + lbl;
+    card.style.borderLeft = '3px solid ' + color;
+
+    card.innerHTML =
+        '<div class="person-hdr">' +
+            '<div class="person-badge" style="color:' + color + '">' + lbl + '</div>' +
+            '<div class="person-activity" style="color:' + color + '">' + act + '</div>' +
+        '</div>' +
+        '<div class="person-score-row">' +
+            '<div class="person-bar-bg">' +
+                '<div class="person-bar" id="pbar-' + lbl + '" ' +
+                     'style="width:' + score + '%;background:' + sc + '"></div>' +
+            '</div>' +
+            '<div class="person-score-val" id="pscore-' + lbl + '" ' +
+                 'style="color:' + sc + '">' + score + '</div>' +
+        '</div>' +
+        objHtml +
+        (gaze ? '<div class="person-gaze" id="pgaze-' + lbl + '">' + gaze + '</div>' : '');
+
+    return card;
+}
+
+function updatePersonCard(p) {
+    var lbl   = p.label || '?';
+    var color = PERSON_COLORS[lbl] || '#aaa';
+    var act   = p.final_activity || 'unknown';
+    var score = p.focus_score || 0;
+    var sc    = scoreColor(score);
+    var det   = p.details || {};
+    var gaze  = det.gaze || '';
+    var objs  = p.detected_objects || [];
+
+    var card = document.getElementById('pcard-' + lbl);
+    if (!card) return false;
+
+    var actEl = card.querySelector('.person-activity');
+    if (actEl) { actEl.textContent = act; actEl.style.color = color; }
+
+    var barEl = document.getElementById('pbar-' + lbl);
+    if (barEl) { barEl.style.width = score + '%'; barEl.style.background = sc; }
+
+    var scEl = document.getElementById('pscore-' + lbl);
+    if (scEl) { scEl.textContent = score; scEl.style.color = sc; }
+
+    var gazeEl = document.getElementById('pgaze-' + lbl);
+    if (gazeEl) gazeEl.textContent = gaze;
+
+    // Cap nhat detected objects
+    var objsEl = document.getElementById('pobjs-' + lbl);
+    if (objsEl) {
+        var tags = '';
+        for (var i = 0; i < objs.length; i++) {
+            var key  = objs[i];
+            var meta = OBJ_META[key] || { icon: '▪', label: key, color: '#888' };
+            tags += '<span class="obj-tag" style="color:' + meta.color + '" title="' + meta.label + '">' +
+                        meta.icon + ' ' + meta.label +
+                    '</span>';
+        }
+        objsEl.innerHTML = tags;
+    }
+
+    return true;
+}
+
+// ── Cap nhat status ──────────────────────────────────
+function updateStatus() {
+    fetch('/status')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (!d) return;
+
+        // Alert toast (TTS message hiển thị khi chưa có loa)
+        checkAlertToast(d);
+
+        // Uptime luon cap nhat
+        document.getElementById('uptime').textContent =
+            'Uptime: ' + formatTime(d.uptime || 0);
+
+        if (d.multi_person && d.persons && d.persons.length > 0) {
+            // ── Che do nhieu nguoi ───────────────────
+            document.getElementById('singleSection').style.display = 'none';
+            document.getElementById('multiSection').style.display  = 'block';
+
+            var persons = d.persons;
+            document.getElementById('personCount').textContent =
+                '(' + persons.length + ' nguoi)';
+            document.getElementById('multiFps').textContent =
+                (d.fps || 0) + ' fps';
+
+            var container = document.getElementById('personCards');
+            var existLabels = {};
+            for (var i = 0; i < container.children.length; i++) {
+                var id = container.children[i].id;
+                if (id) existLabels[id.replace('pcard-', '')] = true;
+            }
+
+            // Cap nhat hoac tao card
+            var newLabels = {};
+            for (var i = 0; i < persons.length; i++) {
+                var p   = persons[i];
+                var lbl = p.label;
+                newLabels[lbl] = true;
+                if (!updatePersonCard(p)) {
+                    container.appendChild(renderPersonCard(p));
+                }
+                // Log cho nguoi dau tien (A)
+                if (i === 0) {
+                    addLog(p.final_status || p.final_activity || '', p.final_activity || '');
+                }
+            }
+
+            // Xoa card cua nguoi da roi
+            for (var lbl in existLabels) {
+                if (!newLabels[lbl]) {
+                    var old = document.getElementById('pcard-' + lbl);
+                    if (old) container.removeChild(old);
+                }
+            }
+
+        } else {
+            // ── Che do 1 nguoi ───────────────────────
+            document.getElementById('singleSection').style.display = 'block';
+            document.getElementById('multiSection').style.display  = 'none';
+
+            document.getElementById('status').textContent = d.final_status || '-';
+
+            var s = d.focus_score || 0;
+            var c = scoreColor(s);
+            document.getElementById('scoreText').textContent = s + '%';
+            document.getElementById('scoreText').style.color = c;
+            var bar = document.getElementById('scoreBar');
+            bar.style.width      = s + '%';
+            bar.style.background = c;
+
+            var det = d.details || {};
+            document.getElementById('detHand').textContent = det.hand || '-';
+            document.getElementById('detGaze').textContent = det.gaze || '-';
+            document.getElementById('detPose').textContent = det.pose || '-';
+            document.getElementById('detFps').textContent  = (d.fps || 0) + ' fps';
+
+            addLog(d.final_status || '', d.final_activity || '');
+        }
+    })
+    .catch(function(e) { console.warn('status fetch:', e); });
+}
+
+// ── Chat ─────────────────────────────────────────────
+function addMessage(text, cssClass) {
+    var box = document.getElementById('chatBox');
+    var div = document.createElement('div');
+    div.className   = 'msg ' + cssClass;
+    div.textContent = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+function setDisplayFlag(flag, value) {
+    var body = {};
+    body[flag] = value;
+    fetch('/api/display', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    }).catch(function(e) {
+        console.warn('setDisplayFlag error:', e);
+    });
+}
+
+function sendChat() {
+    var input = document.getElementById('chatInput');
+    var msg   = input.value.trim();
+    if (!msg) return;
+
+    addMessage('Ban: ' + msg, 'mu');
+    input.value = '';
+
+    fetch('/chat', {
+        method  : 'POST',
+        headers : {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: msg })
+    })
+    .then(function(r) {
+        return r.json();
+    })
+    .then(function(d) {
+        if (d.response) {
+            addMessage('AI: ' + d.response, 'ma');
+        } else {
+            addMessage('Loi ket noi', 'ms');
+        }
+    })
+    .catch(function() {
+        addMessage('Mat ket noi', 'ms');
+    });
+}
+
+function handleKey(e) {
+    if (e.key === 'Enter') {
+        sendChat();
+    }
+}
+
+// ── Capture ──────────────────────────────────────────
+function doCapture() {
+    var btn = document.getElementById('captureBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Dang chup...';
+
+    fetch('/capture')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        btn.disabled    = false;
+        btn.textContent = '📸 Chup';
+
+        if (d.error) {
+            alert('Loi: ' + d.error);
+            return;
+        }
+
+        capturedImageB64 = d.image;
+        document.getElementById('capturedImg').src =
+            'data:image/jpeg;base64,' + d.image;
+        document.getElementById('imgMeta').textContent =
+            d.width + ' × ' + d.height + ' px  |  ' + d.timestamp;
+        document.getElementById('contentResult').textContent =
+            'Bam "Doc noi dung bang AI" de phan tich anh.';
+        document.getElementById('aiProvider').textContent = '';
+        document.getElementById('captureModal').classList.add('open');
+    })
+    .catch(function(e) {
+        btn.disabled    = false;
+        btn.textContent = '📸 Chup';
+        alert('Khong the chup anh: ' + e);
+    });
+}
+
+function closeModal() {
+    document.getElementById('captureModal').classList.remove('open');
+}
+
+function readContent() {
+    if (!capturedImageB64) return;
+
+    var btn = document.getElementById('readBtn');
+    var res = document.getElementById('contentResult');
+    btn.disabled    = true;
+    btn.textContent = '⏳ Dang doc...';
+    res.innerHTML   = '<span class="reading-spinner">🔍 AI dang phan tich anh, vui long cho...</span>';
+
+    fetch('/read_content', {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/json' },
+        body    : JSON.stringify({ image: capturedImageB64 })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        btn.disabled    = false;
+        btn.textContent = '🔍 Doc noi dung bang AI';
+
+        if (d.error) {
+            res.textContent = '❌ ' + d.error;
+            return;
+        }
+
+        res.textContent = d.text || '(Khong co noi dung)';
+        var provEl = document.getElementById('aiProvider');
+        if (d.provider && d.provider !== 'none') {
+            provEl.textContent = 'Provider: ' + d.provider;
+        }
+    })
+    .catch(function(e) {
+        btn.disabled    = false;
+        btn.textContent = '🔍 Doc noi dung bang AI';
+        res.textContent = '❌ Mat ket noi: ' + e;
+    });
+}
+
+// Dong modal khi click ra ngoai
+document.getElementById('captureModal')
+    .addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+// ── Feed: đặt src lúc page load để luôn có timestamp mới (tránh cache) ──
+var feedImg = document.getElementById('feed');
+feedImg.src  = '/video_feed?t=' + Date.now();
+
+feedImg.onerror = function() {
+    var self = this;
+    setTimeout(function() {
+        self.src = '/video_feed?t=' + Date.now();
+    }, 1000);
+};
+
+// ── Homework Assistant ────────────────────────────────
+function updateHomework() {
+    fetch('/homework_status')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (!d || d.state === 'disabled' || d.state === 'error') return;
+
+        var card        = document.getElementById('hwCard');
+        var panel       = document.getElementById('hwPanel');
+        var msg         = document.getElementById('hwMsg');
+        var countdown   = document.getElementById('hwCountdown');
+        var progressBg  = document.getElementById('hwProgressBg');
+        var progressBar = document.getElementById('hwProgressBar');
+        var captureBtn  = document.getElementById('hwCaptureBtn');
+        var analyzeBtn  = document.getElementById('hwAnalyzeBtn');
+        var resultEl    = document.getElementById('hwResult');
+
+        var state = d.state;
+
+        // Ẩn/hiện card
+        card.style.display = (state !== 'idle' || d.progress > 0) ? '' : 'none';
+
+        // Reset panel classes
+        panel.className = 'hw-panel ' + state;
+
+        // Ẩn tất cả controls trước
+        countdown.style.display  = 'none';
+        progressBg.style.display = 'none';
+        captureBtn.style.display = 'none';
+        analyzeBtn.style.display = 'none';
+
+        if (state === 'idle') {
+            msg.textContent = d.progress > 0 ? 'Đang theo dõi...' : '';
+            if (d.progress > 0) {
+                progressBg.style.display  = '';
+                progressBar.style.width   = d.progress + '%';
+                progressBar.style.background = '#2a5a2a';
+            }
+            resultEl.style.display = 'none';
+
+        } else if (state === 'requesting') {
+            msg.textContent       = d.message || '';
+            countdown.style.display = '';
+            countdown.textContent = d.countdown + 's';
+            captureBtn.style.display = '';
+            captureBtn.disabled   = false;
+
+            // Auto-capture progress hoặc manual capture
+            var autoPct = d.auto_capture_pct || 0;
+            var qualityWarn = d.quality_warn || '';
+            if (qualityWarn) {
+                // Quality fail → show warning, đổi màu progress
+                progressBg.style.display  = '';
+                progressBar.style.width   = autoPct + '%';
+                progressBar.style.background = '#8b4513';
+                captureBtn.textContent = '📸 ' + qualityWarn + ' — Thử lại';
+            } else if (autoPct > 0) {
+                progressBg.style.display  = '';
+                progressBar.style.width   = autoPct + '%';
+                progressBar.style.background = '#1a6b4a';
+                captureBtn.textContent = '📚 Đang tự động chụp... ' + autoPct + '%';
+            } else if (d.book_visible) {
+                progressBg.style.display  = '';
+                progressBar.style.width   = '5%';
+                progressBar.style.background = '#1a6b4a';
+                captureBtn.textContent = '📖 Thấy bài tập! Chụp ngay';
+            } else {
+                progressBg.style.display = 'none';
+                captureBtn.textContent = '📸 Chụp hình bài tập';
+            }
+            resultEl.style.display = 'none';
+
+        } else if (state === 'captured') {
+            msg.textContent          = d.message || '';
+            analyzeBtn.style.display = '';
+            analyzeBtn.disabled      = false;
+            analyzeBtn.textContent   = '🔍 Phân tích bằng AI';
+            resultEl.style.display   = d.analysis ? '' : 'none';
+            if (d.analysis) resultEl.textContent = formatHomeworkResult(d.analysis);
+
+        } else if (state === 'cooldown') {
+            msg.textContent        = d.message || '';
+            resultEl.style.display = d.analysis ? '' : 'none';
+            if (d.analysis) resultEl.textContent = formatHomeworkResult(d.analysis);
+        }
+    })
+    .catch(function(e) { console.warn('homework_status:', e); });
+}
+
+function formatHomeworkResult(r) {
+    if (!r) return '';
+    var lines = [];
+    if (r.doing_hw === true)       lines.push('✅ Đang làm bài tập');
+    else if (r.doing_hw === false) lines.push('❌ Không làm bài tập');
+    else                           lines.push('❓ Không rõ');
+
+    var subjMap = {
+        'Math': 'Toán', 'Literature': 'Văn', 'English': 'Anh',
+        'Physics': 'Lý', 'Chemistry': 'Hoá', 'Biology': 'Sinh',
+        'History': 'Sử', 'Geography': 'Địa'
+    };
+    var subj = r.subject ? (subjMap[r.subject] || r.subject) : null;
+    if (subj)     lines.push('📚 Môn: ' + subj + (r.grade ? ' (Lớp ' + r.grade + ')' : ''));
+    if (r.hw_type) lines.push('📝 Dạng: ' + r.hw_type);
+    if (r.progress > 0) lines.push('⏳ Tiến độ: ' + r.progress + '%');
+    if (r.correct === true)  lines.push('✔ Có vẻ đúng');
+    else if (r.correct === false) lines.push('✗ Có thể sai');
+    if (r.help)   lines.push('💡 ' + r.help);
+    if (r.confidence) lines.push('🎯 Độ tin cậy: ' + Math.round(r.confidence * 100) + '%');
+    return lines.join('\n');
+}
+
+function captureHomework() {
+    var btn = document.getElementById('hwCaptureBtn');
+    btn.disabled    = true;
+    btn.textContent = '⏳ Đang chụp...';
+
+    fetch('/homework_capture', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d.error) {
+            btn.disabled    = false;
+            btn.textContent = '📸 Chụp hình bài tập';
+            alert('Lỗi: ' + d.error);
+        }
+        // Nếu ok → updateHomework() poll sẽ tự chuyển UI sang CAPTURED
+    })
+    .catch(function(e) {
+        btn.disabled    = false;
+        btn.textContent = '📸 Chụp hình bài tập';
+        alert('Mất kết nối: ' + e);
+    });
+}
+
+function analyzeHomework() {
+    var btn = document.getElementById('hwAnalyzeBtn');
+    btn.disabled    = true;
+    btn.textContent = '⏳ Đang phân tích...';
+
+    fetch('/homework_analyze', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        btn.disabled    = false;
+        btn.textContent = '🔍 Phân tích bằng AI';
+        var resultEl = document.getElementById('hwResult');
+        if (d.error) {
+            resultEl.style.display = '';
+            resultEl.textContent   = '❌ ' + d.error;
+        } else if (d.result) {
+            resultEl.style.display = '';
+            resultEl.textContent   = formatHomeworkResult(d.result);
+        }
+    })
+    .catch(function(e) {
+        var btn2 = document.getElementById('hwAnalyzeBtn');
+        if (btn2) { btn2.disabled = false; btn2.textContent = '🔍 Phân tích bằng AI'; }
+        var resultEl = document.getElementById('hwResult');
+        if (resultEl) { resultEl.style.display = ''; resultEl.textContent = '❌ Mất kết nối: ' + e; }
+    });
+}
+
+// ── Alert Toast ───────────────────────────────────────
+var _lastAlertText = '';
+var _toastTimer    = null;
+
+function showAlertToast(text) {
+    if (!text) return;
+    var toast    = document.getElementById('alertToast');
+    var toastTxt = document.getElementById('alertToastText');
+    toastTxt.textContent = text;
+    toast.classList.add('show');
+    // Tự ẩn sau 5 giây
+    if (_toastTimer) clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function() {
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+function checkAlertToast(d) {
+    if (!d || !d.last_alert) return;
+    var alert = d.last_alert;
+    // Chỉ hiện khi message mới (chưa hiện lần này) và còn tươi (age < 3s)
+    if (alert.text && alert.text !== _lastAlertText && alert.age < 3.0) {
+        _lastAlertText = alert.text;
+        showAlertToast(alert.text);
+    }
+}
+
+// ── Start ─────────────────────────────────────────────
+setInterval(updateStatus, 1000);
+setInterval(updateHomework, 1000);
+updateStatus();
+updateHomework();
+</script>
+</body>
+</html>

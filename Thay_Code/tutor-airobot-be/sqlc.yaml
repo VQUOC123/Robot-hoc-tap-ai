@@ -1,0 +1,21 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "sql/queries"
+    schema: "migrations"
+    gen:
+      go:
+        package: "query"
+        out: "internal/infrastructure/postgres/query"
+        emit_json_tags: true
+        emit_prepared_queries: false
+        emit_interface: false
+        emit_exact_table_names: false
+        emit_empty_slices: true
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
+          - db_type: "pg_catalog.timestamptz"
+            go_type: "time.Time"
+          - db_type: "inet"
+            go_type: "net.IP"
