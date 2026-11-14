@@ -24,6 +24,10 @@
 | `project_knowledge.md` | `L1-L320` | Toàn văn kiến thức tuần 1-8 | Tài liệu nền tảng kiến thức hệ thống, công thức góc, schema, checklist Q1-Q13 |
 | `Timeline_3_Nhom.md` | `L1-L170` | Phân công 3 nhóm (BE, Training AI, Web & Service) | Timeline nhiệm vụ 8 tuần chi tiết theo STT, phân công và đầu ra |
 | `timeline-8-tuan-chi-tiet.md` | `L1-L206` | Kế hoạch tuần 1-8 mở rộng | Khung phân công, giai đoạn triển khai và mốc demo |
+| `ai_core/posture_math.py` | `L1-L45` | `calculate_angle_2d`, `calculate_shoulder_tilt`, `calculate_neck_tilt` | Module tính góc cột sống/gập cổ thuần tự code của nhóm |
+| `ai_core/posture_tracker.py` | `L1-L60` | `PostureDebounceTracker` | Quản lý state machine Debounce 10s & Cooldown 2 phút chuẩn Q2 |
+| `ai_core/main_monitor.py` | `L1-L100` | `run_posture_monitor` | Ứng dụng AI biên Pose Landmarker tích hợp HUD giám sát tư thế cho Tuần 1-3 |
+| `ai_core/llm_socratic.py` | `L1-L50` | `SOCRATIC_SYSTEM_PROMPT`, `SAMPLE_TEST_SCENARIOS` | Khung Prompt sư phạm gợi mở & kịch bản kiểm thử Tuần 3 |
 
 ## 3. Architecture, State & Critical Invariants
 - **Privacy by Design**:
@@ -46,9 +50,12 @@
 - **[Git Sync & PR Merge Pull]**:
   - Đã pull thành công PR #1 (`585092b` merged by `PhanHoangAnh19`) từ nhánh `origin/main`.
   - Cập nhật 2 tài liệu kế hoạch phát triển mới: `Timeline_3_Nhom.md` và `timeline-8-tuan-chi-tiet.md` (phân bổ nhiệm vụ cho 3 nhóm BE, Training AI, Web & Service).
+- **[Training AI Module Implementation (Tuần 1-2-3)]**:
+  - Tự thiết kế và hiện thực module thuần của nhóm tại `ai_core/`: `posture_math.py`, `posture_tracker.py`, `main_monitor.py`, `llm_socratic.py`.
+  - Không sao chép nguyên mẫu mã nguồn cũ của Thầy; tuân thủ chuẩn Google MediaPipe Tasks API v0.10.35, góc gập cổ >25°, lệch vai >10°, debounce 10s và cooldown 2 phút.
 
 ## 5. Current Status & Pending Roadmap
-- **Status**: Codebase và tài liệu đã đồng bộ 100% với `origin/main` tại commit `585092b`. Cây thư mục sạch sẽ (working tree clean).
+- **Status**: Nhóm Training AI (Quốc & Phúc) đã hoàn thiện bộ mã nguồn cốt lõi tuần 1-2-3 tại `ai_core/`, sẵn sàng test camera và tích hợp cho Mốc Demo M1.
 - **Next Steps**:
-  1. Training AI (Phan Hà Minh Phúc · Nguyễn Văn Quốc): Triển khai pipeline MediaPipe Pose / MoveNet & FaceMesh, kiểm thử FPS/CPU trên Pi 5.
-  2. Bám sát checklist phân công trong `Timeline_3_Nhom.md`.
+  1. Quốc chạy kiểm thử trực tiếp camera với `python3 ai_core/main_monitor.py`.
+  2. Bắn sự kiện JSON sang API của nhóm BE (Linh, Long, Quỳnh).
