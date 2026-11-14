@@ -15,6 +15,8 @@ Hệ thống Robot trợ lý học tập AI chạy trên Raspberry Pi 5 kết h�
 | [03_Yeu_cau_tinh_nang.md](file:///03_Yeu_cau_tinh_nang.md) | Danh sách tính năng, ưu tiên F01–F10 |
 | [04_Kien_truc_he_thong.md](file:///04_Kien_truc_he_thong.md) | Kiến trúc Edge / Cloud, State Machine & Luồng dữ liệu |
 | [05_Ke_hoach_8_tuan.md](file:///05_Ke_hoach_8_tuan.md) | Kế hoạch chi tiết 8 tuần phát triển |
+| [Timeline_3_Nhom.md](file:///Timeline_3_Nhom.md) | Phân công chi tiết 8 tuần cho 3 nhóm (BE, Training AI, Web & Service) |
+| [timeline-8-tuan-chi-tiet.md](file:///timeline-8-tuan-chi-tiet.md) | Kế hoạch phát triển 8 tuần mở rộng |
 | [06_Tieu_chi_nghiem_thu.md](file:///06_Tieu_chi_nghiem_thu.md) | Tiêu chí nghiệm thu & phương pháp đo đạc |
 | [07_Mau_bao_cao_tuan.md](file:///07_Mau_bao_cao_tuan.md) | Mẫu báo cáo tuần & biên bản thử nghiệm |
 | [Y_TUONG_SANG_TAO_ROBOT.md](file:///Y_TUONG_SANG_TAO_ROBOT.md) | Ý tưởng sáng tạo: Emotion Engine, giải lao Gen Alpha, Socratic Tutoring |

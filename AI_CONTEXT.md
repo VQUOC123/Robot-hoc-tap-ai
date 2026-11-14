@@ -22,6 +22,8 @@
 | `Thay_Code/ai-tutor/ai/` | Full | `AIModule` | Client gọi OpenAI, Claude, Gemini, OpenRouter |
 | `Y_TUONG_SANG_TAO_ROBOT.md` | `L1-L150` | Toàn bộ ý tưởng sáng tạo | Cơ chế dò sóng sở thích, mini-game giải lao thông minh, giọng nói cảm xúc & Socratic tutoring |
 | `project_knowledge.md` | `L1-L320` | Toàn văn kiến thức tuần 1-8 | Tài liệu nền tảng kiến thức hệ thống, công thức góc, schema, checklist Q1-Q13 |
+| `Timeline_3_Nhom.md` | `L1-L170` | Phân công 3 nhóm (BE, Training AI, Web & Service) | Timeline nhiệm vụ 8 tuần chi tiết theo STT, phân công và đầu ra |
+| `timeline-8-tuan-chi-tiet.md` | `L1-L206` | Kế hoạch tuần 1-8 mở rộng | Khung phân công, giai đoạn triển khai và mốc demo |
 
 ## 3. Architecture, State & Critical Invariants
 - **Privacy by Design**:
@@ -41,8 +43,12 @@
   - Thiết lập `.gitignore` bảo vệ API keys (`.env`), loại bỏ file nén SD card khổng lồ (>3.4GB), `venv` và `node_modules`.
   - Sao lưu lịch sử submodule vào `.git_backups/` và tích hợp toàn bộ source code vào repo chính.
 
+- **[Git Sync & PR Merge Pull]**:
+  - Đã pull thành công PR #1 (`585092b` merged by `PhanHoangAnh19`) từ nhánh `origin/main`.
+  - Cập nhật 2 tài liệu kế hoạch phát triển mới: `Timeline_3_Nhom.md` và `timeline-8-tuan-chi-tiet.md` (phân bổ nhiệm vụ cho 3 nhóm BE, Training AI, Web & Service).
+
 ## 5. Current Status & Pending Roadmap
-- **Status**: Codebase và tài liệu đã được đồng bộ an toàn lên GitHub (`VQUOC123/Robot-hoc-tap-ai`).
+- **Status**: Codebase và tài liệu đã đồng bộ 100% với `origin/main` tại commit `585092b`. Cây thư mục sạch sẽ (working tree clean).
 - **Next Steps**:
-  1. Trình bày tổng quan những điểm hay ho trong code của Thầy mà nhóm nên "lụm" ngay.
-  2. Chỉ ra những điểm yếu/điểm trừ trong code của Thầy cần cải tiến và viết lại theo ý tưởng độc đáo của nhóm.
+  1. Training AI (Phan Hà Minh Phúc · Nguyễn Văn Quốc): Triển khai pipeline MediaPipe Pose / MoveNet & FaceMesh, kiểm thử FPS/CPU trên Pi 5.
+  2. Bám sát checklist phân công trong `Timeline_3_Nhom.md`.
